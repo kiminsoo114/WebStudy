@@ -1,5 +1,13 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+    pageEncoding="UTF-8" import="com.sist.dao.*"%>
+<%
+    // 사용자가 보내준값을 받는다 (게시물 번호) 
+    String no=request.getParameter("no");
+    // 게시물 번호를 => 오라클로 전송 (DAO) => 해당 게시물의 이름, 제목, 내용 읽어 온다 
+    BoardDAO dao = new BoardDAO();
+    BoardVO vo = dao.boardUpdateData(Integer.parseInt(no));
+    // 읽어온 데이터를 보여준다 
+%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -12,7 +20,7 @@
     }
     .row {
        width:800px;
-       margin: 0px auto; /* 가운데 정렬 */
+       margin: 0px auto; /*가운데 정렬*/
     }
     h1{
         text-align: center;
@@ -21,7 +29,7 @@
 </head>
 <body>
   <div class="container">
-    <h1>글쓰기</h1>
+    <h1>수정하기</h1>
     <div class="row">
     <!-- 데이터 전송 : POST 
           전송할 데이터를 모아서 한번에 전송 => <form>
@@ -53,34 +61,46 @@
                      2. 데이터 전송
                      3. 화면이동 
               => 프로젝트 
-                 1차 : MVC, DAO (SQL), Ajax : 화면 UI
+                 1차 : MVC , DAO (SQL) , Ajax : 화면 UI
                  2차 : Spring (Open Api) : 기능
                  3차 : 최신 기술 
                  
-    -->
-      <form method=post action="insert_ok.jsp">
+     -->
+     <!-- 
+         HTML : 태그는 사용자 정의가 없다 => 사용자 정의 (CSS)
+                속성은 사용자 정의를 많이 사용한다 (JavaScript,Ajax)
+      -->
+      <form method=post action="update_ok.jsp">
         <table class="table">
           <tr>
             <th width=15% class="text-right">이름</th>
-            <td width=85%><input type=text name=name size=15 class="input-sm"></td>
+            <td width=85%><input type=text name=name size=15 
+              class="input-sm" value="<%=vo.getName()%>">
+              <%-- 게시물번호 전송 (감춘다음에 전송) : hidden(번호, 비밀번호, 아이디) --%> 
+              <input type=hidden value="<%=no%>" name="no">
+            </td>
           </tr>
           <tr>
             <th width=15% class="text-right">제목</th>
-            <td width=85%><input type=text name=subject size=45 class="input-sm"></td>
+            <td width=85%>
+              <input type=text name=subject size=45 class="input-sm" value="<%=vo.getSubject()%>">
+            </td>
           </tr>
           <tr>
             <th width=15% class="text-right">내용</th>
             <td width=85%>
-              <textarea rows="8" cols="55" name="content"></textarea>
+              <textarea rows="8" cols="55" name="content"><%=vo.getContent() %></textarea>
             </td>
           </tr>
           <tr>
             <th width=15% class="text-right">비밀번호</th>
-            <td width=85%><input type=password name=pwd size=10 class="input-sm"></td>
+            <td width=85%>
+              <input type=password name=pwd size=10 class="input-sm">
+            </td>
           </tr>
           <tr>
             <td colspan="2" class="text-center">
-              <input type=submit value="글쓰기" class="btn btn-sm btn-primary">
+              <input type=submit value="수정" class="btn btn-sm btn-primary">
               <input type=button value="취소" class="btn btn-sm btn-danger" onclick="javascript:history.back()">
             </td>
           </tr>
@@ -90,10 +110,3 @@
   </div>
 </body>
 </html>
-© 2022 GitHub, Inc.
-Terms
-Privacy
-Security
-Status
-Docs
-Contact 
